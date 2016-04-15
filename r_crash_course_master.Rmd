@@ -1,0 +1,1625 @@
+---
+title: "R Crash Course"
+author: "Tyler Reny"
+date: "March 21, 2016"
+output: pdf_document
+---
+
+Things to cover
+
+#Basics
+- Dropbox
+- clean code matters
+- spaces matter
+- cases matter
+- spelling matters
+- th_is is different from th-is
+- spaces in filenames are BAD. DO NOT DO.
+- what I teach you is what works best for me, isn't necessarily the best practice, not necessarily the most efficient
+- what is R? What is R Studio? They are different -- R Studio is simply an interface that enables us to better use R, nothing we do in R-Studio cannot be reproduced in just basic R
+- R is HARD. Some of it is stupid and inefficient. You will make lots of mistakes and hate it. In the end, though, it is well worth learning and using.
+- 
+#Dropbox
+
+- The cloud is your friend
+- Wise words from Matt -- You should be in a position where you could smash your laptop today and be up and working with a new machine tomorrow. You should not have anything important saved on your local machine. Do it all in the cloud.
+
+#Spacing Matters
+
+Good to leave spaces in code
+
+```{r}
+my_var <- 5 #is easier to read than
+my_var<-5
+```
+
+lm.out <- lm(y ~ x, data=df) 
+
+Is easier to read than:
+
+lm.out<-lm(y~x,df)
+
+#Case matters, too
+
+```{r}
+myVar <- 2 ^ 20
+myvar
+myVar
+```
+
+#There are differnt ways to name variables
+
+```{r}
+some_use_snake_case <- 1
+other.people.use.periods <- 1
+othersUseCamelCase <- 1
+```
+
+This is a matter of preference, but keep it consistent
+
+When you have really long names, R Studios complete can come in handy. For example
+
+```{r}
+this_is_a_ridiculously_long_variable_name_and_you_should_probably_never_do_this <- 2
+```
+
+That is stupid, but let's say you did decide to name something that is this long, use the table complete in R-Studio to fill it is. Just type in 'this' and you will see the name pop up.
+
+
+#The same goes for file names
+
+- DO name your r-script 'data_clean_sept1_part_project.R' and put it in the appropriate folder in your working directory
+- Do NOT name it 'Clean Data 2.R' This gets messy when reading the file back in
+
+#Use the arrow
+
+```{r}
+x <- 3 * 4
+x
+#object we are assigning <- #value we are assigning it
+````
+
+Use the arrow, the '=' will just get confusing; though lots of people use it
+
+Can use mac shortcut alt + - which will create the arrow in R-Studio
+
+There are lots of shortcuts, check them out
+
+Alt + Shift + K will bring up all of these shortcuts
+
+#workflow
+
+- What is an R script?
+- keep raw data raw
+- clean data in a separate R file
+- analyze data in separate file
+- place plots in separate file
+- do not make a ton of duplicated datasets (what I do: raw data, clean data files, clean data R script, analyze data R script)
+
+#What is an R Script
+
+- R Script is where you save all of your code. This is your friend. Keep it clean.
+- "IF thought of re-running analysis makes you ill...you're not doing it right."
+
+#Keep Raw Data Raw
+
+- You want to keep a clean raw copy of your data somewhere at all times
+- Save it and protect it. Never overwrite it.
+- Example: save data as "project_x_RAW_DO_NOT_TOUCH.csv"
+- Then: write clean script in R.
+- Once done cleaning: Save as cleaned file (But be careful!)
+- Note: what I teach you is what works best for me, isn't necessarily the best practice, not necessarily the most efficient, you can come up with your own process as long as it works for you and can be replicated by others.
+
+#r script best practices
+- What is your working directory?
+- Example of workflow
+- write code that is clear
+- comment comment comment > should be able to return 6 months later and know what you did.
+
+#Workspace
+
+- Believe it or not, you will occasionally have to close R and everything you have been working on in the program (which will clear your memory). If that scares you, you are doing it wrong.
+
+- You will also run into situations where you have 5 different analyses going at the same time and you want to keep them separate.
+
+You have to make decisions:
+- What about my analysis that I have conducted do I want to save?
+- where does my analysis live?
+
+- As a beginning user, it is okay to do a lot in working memory. But as you advance, you want to ensure that you reproduce everything that you do.
+
+Let me remind you:
+- "IF thought of re-running analysis makes you ill...you're not doing it right. IF you are scared to closed R-Studio, you are not doing it right."
+
+Rather than trying to remember what you did in the last set of analyses, you want to keep your R script clean and well commented.
+
+#Comment your code!
+
+-Start chunks of code with comments and use five dashes to signify a chunk, ie.:
+
+```{r}
+#########
+# Read in data -----
+#########
+```
+
+#Built in R Functions
+
+```{r}
+y <- seq(1, 20, 1)
+y
+```
+
+Another way to do this
+
+```{r}
+y <- 1:20
+y
+```
+
+You can do sequences of non-integers:
+
+```{r}
+y <- seq(1, 20, .5)
+y
+```
+
+You can repeat numbers:
+
+```{r}
+y <- rep(c(1, 2, 3), 5)
+y
+```
+
+You can round things:
+
+```{r}
+y <- 1.2346947583940
+y
+y <- round(y, 3)
+y
+```
+
+Not everything requires arguments
+
+You can get the date and time:
+
+```{r}
+date()
+```
+
+You can also see what your working directory is:
+
+```{r}
+getwd()
+```
+
+You can see what objects you have saved in memory (I never use this)
+
+```{r}
+ls()
+```
+
+Or the files in your workign directory (I rarely use this, but it is helpful).
+
+```{r}
+list.files()
+```
+
+If you want to remove an object (I never do this)
+
+```{r}
+rm(y)
+```
+
+Or clear your entire memory space (You will use this a lot!)
+
+```{r}
+rm(list=ls())
+```
+
+You can also write your current working dataframe to a csv file...this is sometimes helpful for a number of reasons:
+
+```{r}
+x1 <- rnorm(1000)
+x2 <- rnorm(1000)
+y <- 1 + .5*x1 + .25*x2 + rnorm(1000)
+data <- data.frame(y, x1, x2)
+head(data)
+write.csv(data, file="file_name.csv")
+```
+
+#Types of data
+
+There are several types of data in R. It helps to get familiar with them as you will get a LOT of error messages because your data is in the wrong format. ALL THE TIME. Let me repeat: ALL THE TIME.
+
+Can anyone tell me some of the different data formats?
+
+What is a character string?
+
+```{r}
+character_string <- "This is"
+character_string
+#you can check what type of data it is with class()
+class(character_string)
+```
+
+Get used to using the class function, you will use it all the time (you can also use str() to look at the classes of every variable in the dataset. Or you can use glimpse() in the dplyr() package).
+
+This is not a character string
+
+```{r}
+this_is_not <- rep(1:5, 6)
+this_is_not
+class(this_is_not)
+```
+
+Nor is this:
+
+```{r}
+nor_is_this <- c(1, 3.456, 5000)
+class(nor_is_this)
+```
+
+For all intents and purposes, integers and numeric are the same.
+
+But factors are not!
+
+Sidebar! What is a factor? Note: these are some of the first steps I take when looking at data.
+
+```{r}
+#lets load some sample data
+library(gapminder)
+library(ggplot2)
+library(dplyr)
+
+#what does the data look like
+head(gapminder)
+names(gapminder)
+
+#what sorts of variables does it have?
+str(gapminder)
+class(gapminder$country)
+
+#how big is it? (size matters)
+nrow(gapminder)
+ncol(gapminder)
+dim(gapminder)
+
+#are there missing values?
+table(is.na(gapminder))
+
+#sidebar, does everyone know is.na() and table() and prop.table()?
+is.na(gapminder$country) #boolean of missing values in vector
+
+#nope! What if there were? How would I find it? An introduction to missing data
+gapminder$country[5] <- NA #just adding a missing value in the dataset
+table(is.na(gapminder)) #now we see one is missing
+which(is.na(gapminder)) #which row is it in?
+gapminder[5,]
+
+#how to get rid of it?
+gm2 <- na.omit(gapminder)
+nrow(gm2)
+nrow(gapminder)
+```
+
+Okay, getting back to factors. Each factor is organized in 'levels.' Again, look at the R output:
+
+```{r}
+tail(gapminder$country)
+```
+
+You can also count the levels using the nlevels() function
+
+```{r}
+nlevels(gapminder$country)
+```
+
+How many observations are there for each level of the factor? You can use table to look at this:
+
+```{r}
+table(gapminder$country)
+```
+
+Okay, we see that there are 142 levels, each with 12 observations...how do we know what each level is?
+
+```{r}
+levels(gapminder$country)
+```
+
+Another way to do this is simply look at unique values in the vector. This works for character strings, too. You will use this all the time!
+
+```{r}
+unique(gapminder$country)
+```
+
+Notice they are in alphabetical order. This matters, particularly if you are plotting something. Let's see why.
+
+```{r}
+summarise <- dplyr :: summarise #I DONT KNOW WHY! BUT THIS IS GOOD TO KNOW
+#another not here is that you should be careful not to name variables after functions you use often
+forplot <- gapminder %>% group_by(country) %>% summarise(gdp = mean(gdpPercap))
+
+ggplot(forplot, aes(x=gdp, y=country)) + geom_point()
+```
+
+This is totally useless and what Kathleen Bryant calls Data Puke. Need to re-order:
+
+```{r}
+ggplot(forplot, aes(x = gdp, y = reorder(country, gdp))) + geom_point()
+```
+
+That looks better. What about that missing value, though?
+
+```{r}
+ggplot(na.omit(forplot), aes(x = gdp, y = reorder(country, gdp))) + geom_point()
+```
+
+Always consider sorting your data to make sense of it when you're looking at it. For instance, let's say you don't want to plot it but you want to look at which country has the highest GDP per capita on average.
+
+One way is to use the sort function in base R. But this is only for vectors or factors:
+
+```{r}
+sort(gapminder$gdp) %>% head
+#same as head(sort(gapminder$gpd))
+sort(gapminder$gdp, decreasing=T) %>% head
+```
+
+If you have a dataframe and you want to sort it:
+
+```{r}
+gapminder[order(gapminder$gdpPercap),]
+gapminder[order(gapminder$gdpPercap, decreasing=T),]
+```
+
+Or you can use arrange in dplyr(), which is my preference:
+
+```{r}
+gapminder %>% arrange(gdpPercap) #ascending by default
+post_sort <- gapminder %>% arrange(desc(gdpPercap)) 
+post_sort
+```
+
+There is a lot more you can do with factors, but I usually only use them when I'm plotting so I'll leave this tutorial [HERE](https://stat545-ubc.github.io/block014_factors.html) to refer back to later when you run into problems.
+
+#########
+# Exercise
+#########
+
+
+Using the iris dataset, and the tools above, figure out the petal width of the flower with the longest petal length.
+
+```{r}
+library(car)
+library(dplyr)
+
+
+data <- iris
+data %>% arrange(desc(Petal.Length))
+
+
+
+
+
+
+
+
+
+```
+
+
+
+#Vectors are everywhere
+
+Your variables are also encoded as various data structures. Vectors are the most common. It will help you to get very familiar with these. Think of each of the variables in your dataset as a vector. Envision in your head that it is a line of numbers or characters or whatever you want it to be.
+
+```{r}
+this_is_a_vector <- c(1, 2, 3, 4, 5, 6)
+this_is_a_vector
+```
+
+That is a vector of numbers. Not convinced? R has a built in function to tell you if it is a vector or not:
+
+```{r}
+is.vector(this_is_a_vector)
+#but is this a vector 
+is.vector(gapminder) #nope
+is.data.frame(gapminder)
+```
+
+Perfect!
+
+When you look at a vector on its own, you imagine it lying on its side. When it is in a data frame, however, you will imagine it standing up as a column (think columns in an excel spread sheet). You will very frequently isolate variables (vectors) in your dataset and do things to them.
+
+R has some built in functions to isolate elements in the vector for inspection or antyhing else you want to do.
+
+First, you can see how long a vector is:
+
+```{r}
+length(this_is_a_vector)
+```
+
+We see that it has 6 scalars in it.
+
+You can replace certain elements of the vector. Let's look at the second element in the vector:
+
+```{r}
+this_is_a_vector[2]
+```
+
+It is the number two. You can replace that if you want:
+
+```{r}
+this_is_a_vector[2] <- 100
+this_is_a_vector
+this_is_a_vector[2]
+```
+
+Let's say you add a number to a space in the vector that does not exist. We saw that the vector was 6 scalars long. Let's add something to the 10th space: 
+
+```{r}
+this_is_a_vector[10] <- 1
+this_is_a_vector
+```
+
+We see that R fills it in for us with missing values. It is crucial to know what to do with missing values. We will return to this in a bit. For the time being, we can check if there are missing values or not:
+
+```{r}
+is.na(this_is_a_vector)
+```
+
+We see that there are some TRUEs in there. So we do have missing values. How many are there?
+
+```{r}
+table(is.na(this_is_a_vector))
+```
+
+There are 3 missing values.
+
+Where are their locations in the vector?
+
+```{r}
+which(is.na(this_is_a_vector))
+```
+
+So objects 7, 8, and 9 are missing. What if we want to just simply get rid of them?
+
+One way is called listwise deletion, which I introduced above -- it basically will just delete all NAs in a vector (but be careful, it will delete complete rows in a dataframe!)
+
+```{r}
+new_vector <- na.omit(this_is_a_vector)
+is.vector(new_vector)
+```
+
+That will get rid of them but the output is not a vector. Let's say we just want to get rid of the three variables but conserve its data structure:
+
+```{r}
+new_vector <- this_is_a_vector[-which(is.na(this_is_a_vector))]
+new_vector
+is.vector(new_vector)
+```
+
+You can also replace the values. Just be sure that your indexing is correct
+
+```{r}
+new_vector[10] <- 1
+which(is.na(new_vector))
+new_vector[8:9] #or
+new_vector[c(8,9)]
+new_vector[c(8,9)] <- c(1, 2)
+new_vector
+```
+
+R is built to work with vectors. Many operations are vectorized and these vectorized operations are really really fast! You will learn loops later and you will learn how slow they are compared to vector operations.
+
+For instance, let's say you want to add two vectors together
+
+```{r}
+a <- c(1, 2, 3, 4)
+b <- c(5, 6, 7, 8)
+a
+b
+a + b
+```
+
+You see that it simply adds across each pairwise set of numbers in the vectors.
+
+What if they are different sizes?
+
+```{r}
+a[5] <- 10
+a
+b
+a + b
+```
+
+You can't do it. It throws an error at you.
+
+What would this operation look like in a loop?
+
+```{r}
+a <- a[-5] #remove that fifth item
+
+storage <- rep(NA, length(a))
+storage
+
+for(i in 1:length(storage)){
+  storage[i] <- a[i] + b[i]
+}
+storage 
+storage == (a + b)
+identical(storage, (a+b))
+```
+
+Vectors can often be fed to R functions, which can be quite powerful.
+
+Let's say you want to calculate 5^1, 5^5, 5^10, and 5^15. You can do each separately or you can feed in a vector to the power argument!
+
+```{r}
+5 ^ c(1, 5, 10, 15)
+5 ^ (1:5)
+```
+
+Or, for instance, with certain functions:
+
+```{r}
+rnorm(5, mean=c(1:5))
+```
+
+As you noticed above, the c() function, concatenate, is key to making vectors:
+
+```{r}
+vector1 <- c("hello", "cruel", "world")
+vector1
+```
+
+Plain vanilla R objects are called “atomic vectors” and an absolute requirement is that all the bits of info they hold are of the same flavor, i.e. all numeric or logical or character. If that’s not already true upon creation, the elements will be coerced to the same flavor, using a “lowest common denominator” approach (usually character). This is another stellar opportunity for you to create an object of one flavor without meaning to do so and to remain ignorant of that for a long time. Check early, check often.
+
+```{r}
+vector2 <- c(1, 2, 3)
+out <- cbind(vector1, vector2)
+out
+class(out[,2])
+```
+
+You can force variables into certain formats by using as.x() functions like as.factor(), as.character(), as.numeric(), as.matrix(), as.data.frame() etc.
+
+You can also remove items from vectors. Let's say you have a vector that has 6 values and you want to delete the last one:
+
+```{r}
+vec <- c(1, 2, 3, 4, 5, 6)
+vec[-6]
+```
+
+The minus sign means delete!
+
+You can also delete, let's say, even values of the vector 
+
+```{r}
+evens <- seq(2, 6, by=2)
+evens 
+vec[-evens]
+```
+
+#Data Frames
+
+I haven't spent much time talking about data frames but it is worth spending some time with them because they are the most important and widely used formats you will use and encounter in your work. Visualize the R data frame as your excel spreadsheet. It has rows and columns and can hold different sorts of data (one column can be character strings, another a factor, another numeric, etc.).
+
+As Kathleen says, data frames are awesome because
+
+- They keep related variables neatly together, in sync vis-a-vis row order. ALWAYS KEEP THIS IN MIND!
+- Allow you to apply any filtering of observations uniformly
+- Most of the graphing and modeling you will do in R will be done with data frames. When you read in a dataset with read.csv() the resulting object is a data frame. When you pass data to a modeling function lm(y~x, data=df), the data= argument is asking for you to pass it a data frame. When you plot something with ggplot, you need to give it a data frame with the variables you want to plot.
+- as mentioned above, dataframes hold different flavors of data, which matrices cannot do! (it will coerce variables in matrices to the same format -- usually character strings).
+
+```{r}
+a <- c("that", "hat", "is", "on", "fleek")
+class(a)
+b <- c(1, 2, 3, 4, 5)
+class(b)
+mat.out <- matrix(c(a, b), ncol=2)
+mat.out
+class(mat.out)
+class(mat.out[,1])
+class(mat.out[,2])
+
+#can put in data frame
+data <- data.frame(a, b)
+data
+names(data)
+class(data$a)
+class(data$b)
+#notice how to call up certain columns of the dataframe.
+```
+
+We see that the numeric column, b, was not coerced to a character string. But the character vector was coerced to a factor! How do we change it back to a character?
+
+```{r}
+data$a <- as.character(data$a)
+class(data$a)
+```
+
+Let's load the gapminder data again and go through dataframes.
+
+```{r}
+library(gapminder)
+df <- gapminder
+glimpse(df)
+head(df)
+tail(df)
+```
+
+A reminder of some of the ways we can look at the data:
+
+```{r}
+names(df) #what are the variables
+ncol(df) #how many columns
+length(df) #again number of columns
+length(df$country) #how many values are there in a row
+nrow(df)
+dim(df)
+```
+
+Can also get a statistical summary with summary(). I don't really use this.
+
+```{r}
+summary(df)
+```
+
+You can easily visualize part of the dataset using base R plot functions (formal introductions to plotting will come later).
+
+Notice that we feed the data that the plot() function needs is a dataframe:
+
+```{r}
+plot(gdpPercap ~ year, data=df)
+plot(lifeExp ~ year, data=df)
+plot(pop ~ year, data=df)
+plot(lifeExp ~ gdpPercap, data=df)
+#notice that tilde can be used, or you can specify x and y
+```
+
+On that last plot, what were those two countries experiencing rapid population growth?
+
+```{r}
+plot(pop ~ year, data=df)
+```
+
+What do you all think?
+
+One quick and dirty way is to plot country name labels
+
+```{r}
+plot(pop ~ year, data=df, type='n')
+text(pop ~ year, data=subset(df, year==1997), labels=country)
+```
+
+Or you can sort the data and look at the dataframe
+
+```{r}
+df %>% arrange(desc(pop)) %>% head(20)
+plot(pop ~ year, data=df, type='n')
+text(pop ~ year, data=subset(df, country == "China" | country == "India"), labels=country)
+```
+
+Some other ways to look at variables in your dataset using graphical means is with histograms or density plots. For instance, let's say we want to look at the full spread of the life expectancy data:
+
+```{r}
+hist(df$lifeExp)
+plot(density(df$lifeExp))
+barplot(table(df$continent))
+```
+
+We can also explore variables in a number of other ways.
+
+Let's say we want to know the smallest and largest values of a variable:
+
+```{r}
+hist(df$year)
+range(df$year)
+min(df$year)
+max(df$year)
+summary(df)
+table(df$year)
+unique(df$year)
+```
+
+Or the mean, median, mode:
+
+```{r}
+mean(df$lifeExp) #often has missing data and won't run!
+
+#for instance
+var1 <- c(1, 2, 3, 4, NA, 10, 500)
+mean(var1)
+````
+
+Sidebar. What is I get stuck? I do two things. 1) look at help file 2) search! One of the most important skills you can have is looking for help so you can figure stuff out on your own. 
+
+```{r}
+help(mean)
+?mean
+```
+
+search "NA missing R function mean()" https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=mean+function+r+NA
+
+```{r}
+median(df$lifeExp)
+which.max(table(df$lifeExp)) #this is tricky
+table(df$lifeExp)[1137]
+```
+
+You can also subset dataframes. This is useful if you want to look at a small portion of it. There are a number of ways to do this, I'll show you first the subset function, then I'll introduce some dplyr()
+
+```{r}
+subset(df, country == "Uruguay")
+df %>% filter(country == "Uruguay")
+```
+
+You can see that both are easy.
+
+Another, more common way to do this is to figure out which rows contain data for Urugay and subset the dataframe using row indices. Don't do this. But you will see it a lot:
+
+```{r}
+which(df$country == "Uruguay")
+df[1621:1632,]
+```
+
+You see you get the same answer but it is messy and impedes replication. The dataframe can get re-ordered, re-arranged, and recycled. There is a good chance that you will forget why you did 1621 to 1632 and certainly others will scrath their head when looking at your code.
+
+If you DO ever do something like this, comment out the code immediately so you and others know what you did.
+
+Let's say you want to subset the data to just the year 1952.
+
+```{r}
+subset(df, year == 1952)
+df %>% filter(year == 1952)
+```
+
+See? Pretty easy. 
+
+Now let's say you want to just look at the life expectancy and don't want to return every single row of data, you can also use the select() function within subset:
+
+```{r}
+subset(df, country == "Mexico", select = c(country, lifeExp))
+df %>% filter(country == "Mexico") %>% select(country, lifeExp)
+```
+
+Again, easy. Be careful with the select function because other packages will overwrite it. For instance, let's say you now load the MASS package so you can use it's mvrnorm() function.
+
+```{r}
+library(MASS)
+```
+
+See that error message: "The following object is masked from package:dplyr >>> select"
+
+That means that the package MASS has a function also called select, so now if you use select it will think you are using MASS's select not dplyr's select. Let's see what happens:
+
+```{r}
+select <- MASS :: select #note why I did this
+df %>% filter(country == "Mexico") %>% select(country, lifeExp)
+```
+
+Womp, womp. We broke it. If you missed that you masked select above you would go crazy trying to figure out what this error message is. We can overwrite the function again, though:
+
+```{r}
+select <- dplyr :: select
+df %>% filter(country == "Mexico") %>% select(country, lifeExp)
+```
+
+Tah dah!
+
+You can use the subset function within other functions, too. Let's say you want to plot life expectancy for each year in the United States:
+
+```{r}
+g <- ggplot(subset(df, country=="United States"), aes(x= year, y = lifeExp)) + geom_point() 
+g
+```
+
+Let's say we want to add a regression line with confidence intervals:
+
+```{r}
+g + stat_smooth(method='lm')
+```
+
+#Now some stupid breaking down data frame commands that you probably already know but are important
+
+Dataframes can also be explored using R's annoying base commands that involve brackets. These will get VERY frustrating. Embrace the frustration.
+
+```{r}
+#########
+#columns
+#########
+
+df[,1] #second argument is column number
+df[,"country"] #better habit
+vars <- c("country", "lifeExp") #can subset columns by name
+df[,vars]
+df[,c(1, 2, 3)] #can concatenate column numbers
+df[,1:3] #can use this command
+df[,2:ncol(df)] #if you want all columns from X to end, but you don't want to count
+
+#note that some weird shit can happen if you make a typo, though:
+df[,3.5] #there is no column 3.5!
+
+########
+# rows
+########
+
+df[1,] #look at row 1
+df[1:5,] #look at first 5 rows
+df[c(1, 3, 5),] #look at rows 1, 3, and 5
+
+#similarly
+rows <- c(1, 3, 5)
+df[rows,]
+```
+
+You will get good at knowing if you are working with a vector or a dataframe or matrix with bracketed subsetting commands. Often you will forget you are looking at one or the other and you will forget a comma or add a comma where you don't need one. For example
+
+```{r}
+######
+# accidentally using bracket commands on a vector
+######
+
+df$country[c(1, 3, 5),] #whoops
+df$country[,5] #whoops
+df[c(1, 3, 5)] #whoops --- notice this automatically assumes you want columns -- so it is more dangerous!
+````
+
+#making data.frames explicitly
+
+Often times you want to store data in dataframes. I use this ALL THE TIME when I am plotting so it is good to get used to. ggplot() requires you to feed in a dataframe before plotting and I often will create custom dataframes just for a plot. I am not going to show you the code now, but let's say I estimated the predicted probabilities from a model object for 5 different hypothetical x values. For the sake of the example let's say that the 5 levels are racial resentment and the corresponding predicted probabilities are support for Obama and Hillary Clinton. When I calculate these I will have a vector of predicted probabilities (y-hats) and a corresponding set of hypothetical x's. I need to bind these together to plot them. I am going to bind them in a dataframe for plotting:
+
+```{r}
+xhyp <- 1:5
+obama <- c(.8, .7, .6, .5, .4)
+hillary <- c(.2, .3, .4, .5, .6)
+data_for_plot <- data.frame(racialResentment=xhyp, supportObama=obama, supportHillary=hillary)
+data_for_plot
+```
+
+Now we see that we have our values of x and y ready to go for plotting.
+
+```{r}
+ggplot(data_for_plot, aes(x=racialResentment, y=supportObama)) + geom_point() + geom_line() + geom_point(aes(x=racialResentment, y=supportHillary), color="red") + geom_line(aes(x=racialResentment, y=supportHillary), color="red") + annotate('text', x=c(3,3), y=c(.3,.7), label=c("Obama", "Clinton"), color=c('red', 'black')) + labs(y="Support")
+```
+
+Another way to do this is to melt the dataframe into a LONG format that will allow you to powerfully use ggplots functions to group data and create legends. It is tricky. I am not good at it. I will show you the hacky way first. Basically we want support to be a single column and have anther variable that will tell us if the support is for Obama or for Hillary.
+
+```{r}
+new_df_forplot <- data.frame(racialResentment = rep(NA,10),
+                             support = NA,
+                             candidate = NA)
+new_df_forplot
+new_df_forplot$racialResentment <- c(1:5, 1:5)
+new_df_forplot$support <- c(data_for_plot$supportObama, data_for_plot$supportHillary)
+new_df_forplot$candidate <- c(rep("Obama",5), rep("Hillary", 5)) %>% as.factor() 
+#I made the grouping variable a factor because ggplot likes it to be a factor
+new_df_forplot
+
+ggplot(new_df_forplot, aes(x=racialResentment, y=support, group=candidate, color=candidate)) + geom_line()
+```
+
+Now we see the plot looks the same, but by including the group and color variable in the ggplot function call we get a color-coded legend.
+
+The more appropriate way to make this data long is to use melt() function:
+
+```{r}
+library(reshape2)
+new_df_forplot <- melt(data_for_plot, id.vars="racialResentment")
+
+ggplot(new_df_forplot, aes(x=racialResentment, y=value, group=variable, color=variable)) + geom_line()
+```
+
+Some concluding notes on dataframes:
+
+1) Use them! They are modern, fast, slick and can be manipulated easily using the dplyr() package, which we will get into in more detail.
+
+2) Refer to variables by name, when you can, not column number. The order of columns can switch!
+
+```{r}
+df[,"lifeExp"]
+#is better than
+names(df)
+df[,4]
+
+#this is a compromise, it is just inefficient
+rownum <- which(names(df)=="lifeExp")
+df[,rownum]
+```
+
+If variable names in the dataset are confusing, change them! Something like lifeExp is clear and concise. X9 isn't. Nor is country.year.life.expectancy. Many of these variable names will propogate down to plots, so making them clear will help with not only your own understanding of the code, but also help you avoid making mistakes, and help others understand what is going on with your code.
+
+3) NEVER USE ATTACH(). It is evil. It is much better practice to simply get used to typing df$ in front of variable names. I make sure I always keep my dataframe names short so that it isn't a pain to type that every time. If you want to save time, use with(). With allows you to just name variables as if the dataset is attached, but only for the function wrapped in the with() call.
+
+```{r}
+with(df, mean(lifeExp))
+```
+
+The with() command can save you some nasty subsetting. For example, say you want to calculate the correalation of life expectancy and gdp per capita for those in Columbia between 1952 and 1972 . I will show you the hard way first, and then the easy way:
+
+```{r}
+cor(df$lifeExp[df$country == "Colombia" & df$year <= 1972], df$gdpPercap[df$country == "Colombia" & df$year <= 1972], use="complete.obs")
+```
+
+OR, the easy way:
+
+```{r}
+with(subset(df, year <= 1972 & country == "Colombia"), 
+      cor(lifeExp, gdpPercap))
+
+#OR my preferred way
+
+df %>% filter(year <= 1972, country == "Colombia") %>% summarise(cor(lifeExp, gdpPercap))
+```
+
+# RECODING DATA
+
+A brief detour here to recoding data. This is something you have to do all the time so it pays to get good at it. I am going to show you a few things. First, I will show you the old school recode method using base R. I will show you how to recode using a package recode(). Finally, I will show you a few tips and tricks I have picked up along the way. There are likely other ways to do these things but this is what I have learned to do on my own.
+
+We start with base R. We will create some fake data for this example. First, we create that fake data:
+
+```{r}
+num.values <- c(1, 2, 3, 4, 5, 89, 99)
+char.values <- c("White", "Black", "Latino", "Other")
+
+varA <- sample(num.values, 100, replace=T)
+varB <- rnorm(100, 25000, 15000)
+varB[46] <- NA #add a missing value
+varC <- sample(char.values, 100, replace=T)
+
+#combine into dataset
+
+sampleData <- data.frame(varA, varB, varC)
+sampleData
+````
+
+Here is what we know of this data. We know that varA corresponds to a likert scale of attitudes towards Obama. varB is income. varC is race of respondent. We also know that 88 and 99 are codes for missing data. We want to do a few things with this data. First, we want to rename variables so that we know what they are. Second, we want to recode the appropriate values to missing. Finally we want to create some dummy variables. We will create one dummy for race (white versus non-white) and another for high versus low income. Let's go through each.
+
+We start with renaming variables. There are a few schools here with renaming. You could directly rename variables in the dataset, but I think it is best to simply copy the variable and rename the copy. A TIP ABOUT RENAMING. THIS IS IMPORTANT. Rename variables something that is clear and concise. If you have a variable called gender that is coded 1, 2, and 3 (male, female, other), do NOT just put that in a regression. It will read as continuous. Often you want to know the difference between males and females, so you create a dummy (1 female, 0 all else), and you name it female. That way if someone looks at the regression table, they will know what the variable means, you will never forget what the variable mneans, etc. Often I will recode an ideology score measure (usually a 1-5 pt scale) as "liberal" or "conservative" depending on what 5 stands for. Or if my partisan ID scale (pid7) has 7 as strong republican, I can rename the varialbe ("republican") so I will not forget the order of the scale.
+
+```{r}
+sampleData$obama_attitudes <- sampleData$varA
+sampleData$obama_attitudes
+
+sampleData$income <- sampleData$varB
+sampleData$income
+
+sampleData$race_respondent <- sampleData$varC
+sampleData$race_respondent
+
+sampleData
+````
+
+Now when we look at the sample data, we have 6 columns. This is useful because we can always go back and compare to the original untouched variable from the dataset if something should be recoded incorrectly in the new copy of the variable. Let's now change the 89s and 99s to missing data. There are a few ways to do this:
+
+```{r}
+is.na(sampleData$obama_attitudes) #see that nothing is currently coded as NA
+
+#using base R
+sampleData$obama_attitudes[sampleData$obama_attitudes %in% c(89,99)] <- NA
+
+#this is equivalent to (NOTE HOW IF I MESS UP RECODE, I CAN JUST REWRITE THE VARIABLE FROM THE ORIGINAL, THIS IS WHY YOU WANT TO NAME YOUR NEW VARIABLES)
+sampleData$obama_attitudes <- sampleData$varA
+sampleData$obama_attitudes[sampleData$obama_attitudes == 89 | sampleData$obama_attitudes == 99] <- NA
+sampleData$obama_attitudes
+
+#you can also use the recode function from the car package.
+library(car)
+sampleData$obama_attitudes <- sampleData$varA
+sampleData$obama_attitudes <- recode(sampleData$obama_attitudes, "89:99 = NA")
+sampleData$obama_attitudes
+is.na(sampleData$obama_attitudes)
+```
+
+Let's say we look back at the codebook and see that 5 is coded as liking Obama and you want to reverse code it so that 1 is coded as liking Obama and 5 as disliking him. There are a few ways to do this, too.
+
+```{r}
+sampleData$obama_attitudes <- sampleData$varA
+sampleData$obama_attitudes <- recode(sampleData$obama_attitudes, "5=1;4=2;3=3;2=4;1=5;89:99=NA")
+sampleData$obama_attitudes
+```
+
+This is my favorite trick, though, for continuous variables that you simply want to flip:
+
+```{r}
+sampleData$obama_attitudes <- sampleData$varA
+sampleData$obama_attitudes <- recode(sampleData$obama_attitudes, "89:99 = NA")
+table(sampleData$obama_attitudes)
+length(table(sampleData$obama_attitudes))
+
+#to flip you take the absolute value of the values minus unique values + 1
+#I use this ALL THE TIME!
+sampleData$obama_attitudes - 6
+sampleData$obama_attitudes <- abs(sampleData$obama_attitudes - 6)
+
+#you could write this into a function, too!
+reverse_code <- function(x){
+  vals <- length(table(x)) + 1
+  abs(x - vals)
+}
+
+reverse_code(sampleData$obama_attitudes)
+```
+
+Okay, now that the variables are renamed and recoded, we want to create some dummy variables. We will create one dummy for race (white versus non-white) and another for high versus low income.
+
+First, we create a dummy variable for white respondents. Here is one way:
+
+```{r}
+sampleData$white <- rep(0, nrow(sampleData))
+sampleData$white[sampleData$race_respondent == "White"] <- 1
+sampleData$white
+
+#OR
+sampleData$white <- ifelse(sampleData$race_respondent == "White", 1, 0)
+```
+
+For the income, we are going to split the sample on high and low income. Let's say that we are agnostic as to what constitutes high and low, we could potentially just split the sample at the middle 50th percentile and dummy for high/low.
+
+```{r}
+cut_point <- quantile(sampleData$income, c(.50), na.rm=T)
+sampleData$inc_high <- ifelse(sampleData$income > cut_point, 1, 0)
+sampleData$inc_high
+```
+
+Let's say you want to run a regression now with the cleaned data. The Obama Attitudes measure has a lot of missing data:
+
+```{R}
+table(is.na(sampleData$obama_attitudes))
+```
+
+If we simply run a regression now we'll drop a bunch of observations. One thing you want to think through with missing data is if you can recode it to something that makes substantive sense. For example, with Obama Attitudes, a likert scale could include "Strongly Approve" "Somewhat Approve" "Neutral" "Somewhat Disapprove" "Strongly Disapprove". If we have a theoretical reason to assume that NA's would be "neutral" then we can recode the missing values as 3 and preserve those observations:
+
+```{r}
+sampleData$obama_attitudes[is.na(sampleData$obama_attitudes)] <- 3
+sampleData$obama_attitudes
+sampleData
+```
+
+And you are good to go.
+
+#LISTS!
+
+Lists are useful but less commonly used. You will encounter them a lot when looking at things returned by packages because they can hold everything. I will often write custom functions to return things that I have calculated and I will often store the elements in a list.
+
+What are they? I like to think of them like special drawers in a filing cabinet. Each spot in the list can hold unique dataframes that can contain whatever you want them to contain! For instance, let's make a list that will hold several things:
+
+```{r}
+mylist <- list(grocery_list = c("yogurt", "milk", "eggs"),
+               random_numbers = rnorm(50),
+               states = as.factor(state.abb),
+               mydataframe = data.frame(a=c(1, 2, 3), b=c("a", "b", "c")))
+mylist
+```
+
+Cool! Let's look at what is in the list in a few different ways:
+
+```{r}
+class(mylist)
+str(mylist)
+```
+
+You see that I store a character string that is 3 unique values long, 50 random numbers, a factor of state names, and finally a dataframe which has a numeric element and a factor in it. 
+
+Lists are super flexible.
+
+They are indexed like vectors but you use two brackets to access them:
+
+```{r}
+mylist[[1]]
+
+#or 
+
+mylist[["grocery_list"]]
+```
+
+How many items does the list hold?
+
+```{r}
+length(mylist)
+```
+
+Indexing can get pretty complex with lists. For example, let's say I want to pull out the second item of the grocery list or the second column of the dataframe in the fourth list item:
+
+```{r}
+mylist[["grocery_list"]][2]
+mylist[[4]][,2]
+```
+
+You can also use the dollar sign operator
+
+```{r}
+mylist$grocery_list[2]
+```
+
+If you want to just work with one item of a list, you can return it as a new dataframe and work with it that way:
+
+```{r}
+newdf <- mylist[[1]]
+newdf[2]
+```
+
+There is a lot more we could do on matrices and arrays but I never really use them so I will leave [THIS HERE](https://stat545-ubc.github.io/block004_basic-r-objects.html) for you to review if you'd like.
+
+#Brief Detour: Reading in Data
+
+Data import generally feels one of two ways:
+
+1) “Surprise me!” This is the attitude you must adopt when you first get a dataset. You are just happy to import without an error. You start to explore. You discover flaws in the data and/or the import. You address them. Lather, rinse, repeat.
+2) “Another day in paradise.” This is the attitude when you bring in a tidy dataset you have maniacally cleaned in one or more cleaning scripts. There should be no surprises. You should express your expectations about the data in formal assertions at the very start of these downstream scripts.
+
+In the second case, and as the first cases progresses, you actually know a lot about how the data is / should be. My main import advice: use the arguments of your import function to get as far as you can, as fast as possible. Novice code often has a great deal of unnecessary post import fussing around. Read the docs for the import functions and take maximum advantage of the arguments to control the import.
+
+Most of the data you will be reading in will be either in csv format or some propietary data format. Almost everything I do, I do with csv.
+
+```{r}
+library(gapminder)
+setwd("/Users/treny/Dropbox/teaching/R-Crash-Course/")
+write.csv(gapminder, file="gapdata.csv")
+df <- read.csv("gapdata.csv")
+head(df)
+glimpse(df)
+
+#strings as factors = F
+df <- read.csv("gapdata.csv", stringsAsFactors=F)
+head(df)
+glimpse(df)
+```
+
+Often you will also have data in stata or spss format. I recommend two packages for checking this out: foreign and haven. Look at the help files for both before trying to use them. If you run into data in text document format, you might have to use functions liek read.table() to bring it in.
+
+##DPLYR
+
+Dplyr is a somewhat new package for data manipulation that most old school R people won't know but it is a lifesaver. Everyone should learn it and start using it immediately (but you should also know base R commands that do the same thing).
+
+Dplyr was developed by Hadley Wickham, who is a god among men (he also created GGPLOT).
+
+Dplyr grows out of plyr() which was the previous package that I don't understand (it still has some useful functions, though. You can look it up if you are interested).
+
+Let's go back to the gapminder data for some examples of the wonders of dplyr (many of which you have seen above).
+
+```{r}
+library(gapminder)
+glimpse(gapminder)
+```
+
+In Dplyr(), data is displayed in tbl_df, which is basically a manipulated data.frame(). 
+
+Before dplyr, a lot of people would create mini data frames to answer simple questions:
+
+```{r}
+canada_snippet <- subset(gapminder, country == "Canada")
+canada_snippet
+```
+
+Okay, great, you have a dataframe. As Kathleen advises, stop and ask youself: "Do I want to create mini datasets for every level of the factor to compute something?"
+
+If yes, use commands in ggplot2 to graph them! Or use dplyr! Copies and excerpts of your data clutter your workspace, invite mistakes, and sow general confusion. Avoid whenever possible.
+
+If you are interested, say, in regressing life expenctancy on gdpPercapita for just Canada, you can use the snippet trick above:
+
+```{r}
+lm.out <- lm(lifeExp ~ gdpPercap, data=canada_snippet)
+summary(lm.out)
+```
+
+OR you can save yourself extra steps by doing it in the function call itself:
+
+```{r}
+lm.out <- lm(lifeExp ~ gdpPercap, data=subset(df, country == "Canada"))
+summary(lm.out)
+```
+
+OR
+
+```{r}
+lm.out <- lm(lifeExp ~ gdpPercap, data=df %>% filter(country == "Canada"))
+summary(lm.out)
+```
+
+Notice that filter command above. Filter is your friend. This is the nicest way to subset data. For those who know Stata, it is similar to the "if" command.
+
+Some examples of filter with gapminder:
+
+```{r}
+filter(gapminder, country == "Rwanda")
+filter(gapminder, country == "Rwanda" | country == "Afghanistan")
+filter(gapminder, country %in% c("Rwanda","Afghanistan"))
+```
+
+#Meet the new pipe operator
+
+One of the cool things about dplyr is the pipe operator (%>%). It helps make your code nice and easy to read, moving us away from base R russian doll syntax.
+
+```{r}
+gapminder %>% head
+#is the same as 
+head(gapminder)
+
+gapminder %>% head(10)
+```
+
+What is the pipe actually doing? Taking the first argument and passing it to the first argument in the following function:
+
+```{r}
+gapminder %>% head(., 10)
+head(gapminder, 10)
+```
+
+Whenever you see the pipe, say the words "then" in your head.
+
+```{r}
+gapminder %>%
+  filter(country %in% c("Rwanda", "Kuwait")) %>%
+  select(year, lifeExp) %>%
+  head(4)
+```
+
+"Take dataframe 'gapminder', then filter out just the countries we want, then select just the variables we want, then print out the first four rows of the head of the dataframe"
+
+HEre is base R:
+
+```{r}
+gapminder[gapminder$country == "Cambodia", c("year", "lifeExp")]
+
+#is equivalent to:
+
+gapminder %>%
+  filter(country == "Cambodia") %>%
+  select(year, lifeExp)
+```
+
+Some other functions from dplyr
+
+Use mutate() to add new variables to your dataframe
+
+In base r, this would look like:
+
+```{r}
+gapminder$gdp <- gapminder$pop * gapminder$gdpPercap  
+names(gapminder)
+gapminder$gdp
+
+
+#or in dplyr
+gapminder <- gapminder %>%
+  mutate(gdp = pop * gdpPercap)
+names(gapminder)
+```
+
+I've already shown you arrange:
+
+```{r}
+gapminder %>% arrange(year, country) %>% head
+````
+
+Or maybe you just want to see data from 2007 sorted by life expectancy?
+
+```{r}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  arrange(desc(lifeExp)) %>% 
+  head(10)
+
+```
+
+You can rename variables:
+
+```{r}
+rename <- dplyr :: rename
+gapminder %>% 
+  rename(life_exp = lifeExp) %>%
+  head()
+```
+
+My single favorite combination of functions in Dplyr is group_by() and summarise()
+
+group_by() lets you do computation within groups. Say you want to take the mean life expectancy for each country.
+
+```{r}
+gapminder %>% group_by(country) %>% summarise(mean_lifeExp = mean(lifeExp)) %>% arrange(desc(mean_lifeExp))
+````
+
+Or you want to count the number of observations on each continent
+
+```{r}
+gapminder %>% 
+  group_by(continent) %>%
+  summarise(n = n())
+
+#OR
+
+gapminder %>% 
+  group_by(continent) %>%
+  tally
+```
+
+You can add multiple commands to the same summarise function
+
+```{r}
+gapminder %>% 
+  group_by(continent) %>%
+  summarise(n = n(),
+            mean_gdpPC = mean(gdpPercap),
+            mean_pop = mean(pop))
+```
+
+In sum, summarise returns a single summary statistic for each group.
+
+summarise_each() will provide the same call for each variable in the dataframe that you want. Say, for example, you have a datset of numerical values for counties in the US and you want summaries of those values by state.
+
+```{r}
+sampleData <- data.frame(state=c("ME", "ME", "ME", "CA", "CA", "CA"),
+                         varA = c(2,6,5,8,9,10),
+                         varB = c(10, 12, 14, 12, 12, 12))
+sampleData
+
+sampleData %>% group_by(state) %>% summarise_each(funs(mean, median))
+```
+
+Okay, let's do another question. Which country had the largest increase in gdp per capita from 1952 to 2007?
+
+```{r}
+gapminder %>%
+  filter(year %in% c(1952,2007)) %>%
+  select(year, country, gdpPercap) %>%
+  group_by(country) %>%
+  summarise(change_gpd = gdpPercap[year == 2007] - gdpPercap[year==1952]) %>%
+  arrange(desc(change_gpd)) %>%
+  head() 
+```
+
+Some closing thoughts for dplyr:
+
+Break the code into pieces, starting at the top, and inspect the intermediate results. These commands do not leap fully formed out of anyone’s forehead – they are built up gradually, with lots of errors and refinements along the way. I’m not even sure it’s a great idea to do so much manipulation in one fell swoop. Break it up if that helps. Your code should be easy to write and read when you’re done.
+
+USE THIS CHEAT SHEET 
+https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf?version=0.99.687&mode=desktop
+
+#INTRODUCTION TO FUNCTIONS
+
+If you plan on copying and pasting code more than once, best to write a function. -- Hadley Wickham
+
+What is a function? A function takes a set of inputs, does something to them, and returns an answer for you. Let's say, for example, that you want to calculate the mean, median, and range of some vectors. You could jsut write out the mean(varA, na.rm=T), median(varA, na.rm=T), and range(varA, na.rm=T) each time, but you could also write a function to do it for you.
+
+```{r}
+sum_stats <- function(x){
+  mean.out <- mean(x, na.rm=T)
+  median.out <- median(x, na.rm=T)
+  range.out <- range(x, na.rm=T)
+  list.out <- list(mean = mean.out,
+                   median = median.out,
+                   range = range.out)
+  return(list.out)
+}
+
+varA <- rnorm(100,1,2)
+sum_stats(varA)
+
+varB <- rbinom(50,1,.4)
+sum_stats(varB)
+
+sum_stats(1:100)
+sum_stats(gapminder$gdpPercap)
+sum_stats(gapminder$lifeExp)
+```
+
+Voila!
+
+Forget what your function looks like? Just call the function without an argument:
+
+```{r}
+sum_stats
+```
+
+Be careful, sometimes functions work when we don't want them to:
+
+```{r}
+sum_stats(c(TRUE, TRUE, FALSE))
+```
+
+There are some checks you can write into the function to make sure this doesn't happen:
+
+```{r}
+sum_stats <- function(x){
+  stopifnot(is.numeric(x))
+  mean.out <- mean(x, na.rm=T)
+  median.out <- median(x, na.rm=T)
+  range.out <- range(x, na.rm=T)
+  list.out <- list(mean = mean.out,
+                   median = median.out,
+                   range = range.out)
+  return(list.out)
+}
+sum_stats(c(TRUE, TRUE, FALSE))
+```
+
+You can write a custom error message if your check fails:
+
+```{r}
+sum_stats <- function(x){
+  if(!is.numeric(x)){
+    stop("Tyler, you are an idiot, you know that this function should only take numeric values, this is: ",   class(x))
+  }
+  mean.out <- mean(x, na.rm=T)
+  median.out <- median(x, na.rm=T)
+  range.out <- range(x, na.rm=T)
+  list.out <- list(mean = mean.out,
+                   median = median.out,
+                   range = range.out)
+  return(list.out)
+}
+sum_stats(c(TRUE, TRUE, FALSE))
+```
+
+Here is a slightly more involved function but one that would be useful:
+
+```{r}
+bootstrap_lm <- function(formula, data, number_bootstraps){
+  bin <- rep(NA, number_bootstraps)
+  for(i in 1:number_bootstraps){
+      samp <- sample(1:nrow(data), replace=T)
+      dfboot <- data[samp,]
+      lm.out <- lm(lifeExp ~ gdpPercap, data=dfboot)
+      coef.out <- coef(lm.out)[2]
+      bin[i] <- coef.out
+  }
+  results <- list(mean=mean(bin),
+       se = sd(bin),
+       lower = quantile(bin, 0.025),
+       upper = quantile(bin, 0.975))
+  plot(density(bin))
+  abline(v=mean(bin))
+  print(results)
+}
+form <- lifeExp ~ pop
+bootstrap_lm(form, gapminder, 1000)
+
+form <- lifeExp ~ gdpPercap
+bootstrap_lm(form, gapminder, 1000)
+```
+
+How did I think through this? I broke it up into pieces
+
+```{r}
+data <- gapminder
+samp <- sample(1:nrow(data), replace=T)
+table(samp) %>% sort()
+dfboot <- data[samp,]
+dfboot
+names(dfboot)
+lm.out <- lm(lifeExp ~ pop, data=dfboot)
+coef(lm.out)
+coef(lm.out)[2]
+```
+
+#Packages
+
+You probably already know this, but packages are important. They can be loaded a few different ways. My favorite is:
+
+```{r}
+#install.packages("dplyr")
+#library(dplyr)
+```
+
+Can also call from someone's github page
+
+```{r}
+library(devtools)
+#install_github("hadley/ggplot2")
+```
+
+Finally, you can download the source file from an authors
+
+#Loops!
+
+Every time an operation needs to be repeated, a loop may come in handy. We only need to specify how many times or upon which conditions those operations need execution: we assign initial values to a control loop variable, perform the loop and then, once finished, we typically do something with the results. But when are we supposed to use loops? Couldn't we just replicate the desired instruction for the sufficient number of times? Well, our personal and arbitrary rule of thumb is that if you need to perform an action (say) three times or more, then a loop or function would serve you better; it makes the code more compact, readable and maintainable and you may save some typing. 
+
+Loops are tricky to wrap your head around, but once you get the basic logic, they make sense. There are two components. First, you want to know how many times you want the loop to iterate through. Second, you need to think of where you are going to store the results of the loop.
+
+Always think through the loop first in terms of what you want to do, then you can fill in the code. Let's take a bootstrap for example. Let's say we want to bootstrap the standard error of a simple linear model.
+
+What you want to do is:
+
+create a bin to store results (note, always pre-allocate space in the storage bin).
+
+For i is from 1 to 1000:
+  sample random digits with replacement
+  subset the dataset to create a new dataset using the random digits from the previous step
+  run the model and save to an object
+  pull out and save the beta estimate of interest
+End of Loop  
+  
+```{r}
+#make fake data
+x <- rnorm(1000)
+y <- .5 + .25*x + rnorm(1000)
+data <- data.frame(y=y, x=x)
+
+boots <- 1000
+storage <- rep(NA, boots)
+
+for(i in 1:boots){
+  rows <- sample(1:nrow(data), replace=T)
+  newdataset <- data[rows,]
+  lm.out <- lm(y ~ x, newdataset)
+  storage[i] <- coef(lm.out)[2]
+}
+
+storage
+
+plot(density(storage))
+abline(v=mean(storage), col="red")
+se <- sd(storage)
+ci95 <- quantile(storage, c(0.025, 0.975))
+abline(v=ci95, col="blue")
+```
+
+Two tips:
+
+1) try each line of the loop outside of the loop first.
+
+```{r}
+rows <- sample(1:nrow(data), replace=T)
+newdataset <- data[rows,]
+lm.out <- lm(y ~ x, newdataset)
+storage[i] <- coef(lm.out)[2]
+```
+
+2) If you have a complex loop, it is best to try looping through a few times just to see what it is returning
+
+```{r}
+storage <- rep(NA, 5)
+for(i in 1:5){
+  rows <- sample(1:nrow(data), replace=T)
+  newdataset <- data[rows,]
+  lm.out <- lm(y ~ x, newdataset)
+  storage[i] <- coef(lm.out)[2]
+}
+storage
+```
+
+#EXERCISE LOOPS
+
+Write a loop that takes 1000 samples of 50 values from a standard normal distribution (rnorm()), calculates the mean, and stores that mean in a vector. Then plot the distribution of those means, calculate the mean and 95% confidence interval.
+
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+```{r}
+ggplot(gapminder, aes(x=year, y=lifeExp, color=continent)) + geom_point() + stat_smooth(method='lm') + facet_wrap(~continent)
+ stat_smooth('lm')
+?stat_smooth
+#functions
+
+#plotting data
+
+#regressions
+
+#finding help and troubleshooting
+
+#paste
+
+#string manipulation
