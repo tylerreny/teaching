@@ -65,7 +65,6 @@ this_is_a_ridiculously_long_variable_name_and_you_should_probably_never_do_this 
 
 That is stupid, but let's say you did decide to name something that is this long, use the table complete in R-Studio to fill it is. Just type in 'this' and you will see the name pop up.
 
-
 #The same goes for file names
 
 - DO name your r-script 'data_clean_sept1_part_project.R' and put it in the appropriate folder in your working directory
@@ -129,13 +128,14 @@ You have to make decisions:
 - As a beginning user, it is okay to do a lot in working memory. But as you advance, you want to ensure that you reproduce everything that you do.
 
 Let me remind you:
+
 - "IF thought of re-running analysis makes you ill...you're not doing it right. IF you are scared to closed R-Studio, you are not doing it right."
 
 Rather than trying to remember what you did in the last set of analyses, you want to keep your R script clean and well commented.
 
 #Comment your code!
 
--Start chunks of code with comments and use five dashes to signify a chunk, ie.:
+Start chunks of code with comments and use five dashes to signify a chunk, ie.:
 
 ```{r}
 #########
@@ -265,13 +265,13 @@ For all intents and purposes, integers and numeric are the same.
 
 But factors are not!
 
-Sidebar! What is a factor? Note: these are some of the first steps I take when looking at data.
+Sidebar: What is a factor? Also note: these are some of the first steps I take when looking at data.
 
 ```{r}
 #lets load some sample data
-library(gapminder)
-library(ggplot2)
-library(dplyr)
+library(gapminder) #this is the dataset
+library(ggplot2) #for plotting
+library(dplyr) #for manipulating the data
 
 #what does the data look like
 head(gapminder)
@@ -285,6 +285,7 @@ class(gapminder$country)
 nrow(gapminder)
 ncol(gapminder)
 dim(gapminder)
+View(gapminder)
 
 #are there missing values?
 table(is.na(gapminder))
@@ -296,10 +297,10 @@ is.na(gapminder$country) #boolean of missing values in vector
 gapminder$country[5] <- NA #just adding a missing value in the dataset
 table(is.na(gapminder)) #now we see one is missing
 which(is.na(gapminder)) #which row is it in?
-gapminder[5,]
+head(gapminder, 10)
 
 #how to get rid of it?
-gm2 <- na.omit(gapminder)
+gm2 <- na.omit(gapminder) #listwise delete the row
 nrow(gm2)
 nrow(gapminder)
 ```
@@ -325,26 +326,30 @@ table(gapminder$country)
 Okay, we see that there are 142 levels, each with 12 observations...how do we know what each level is?
 
 ```{r}
-levels(gapminder$country)
+levels(gapminder$country) 
 ```
 
 Another way to do this is simply look at unique values in the vector. This works for character strings, too. You will use this all the time!
 
 ```{r}
 unique(gapminder$country)
+test <- c("This", "Class", "Is", "Fun", "Fun", "Fun")
+unique(test)
 ```
 
 Notice they are in alphabetical order. This matters, particularly if you are plotting something. Let's see why.
 
 ```{r}
-summarise <- dplyr :: summarise #I DONT KNOW WHY! BUT THIS IS GOOD TO KNOW
+#side note on packages and overwriting functions
+#summarise <- dplyr :: summarise 
+
 #another not here is that you should be careful not to name variables after functions you use often
 forplot <- gapminder %>% group_by(country) %>% summarise(gdp = mean(gdpPercap))
 
 ggplot(forplot, aes(x=gdp, y=country)) + geom_point()
 ```
 
-This is totally useless and what Kathleen Bryant calls Data Puke. Need to re-order:
+This is totally useless and what Kathy Bryant calls Data Puke. Need to re-order:
 
 ```{r}
 ggplot(forplot, aes(x = gdp, y = reorder(country, gdp))) + geom_point()
@@ -366,7 +371,7 @@ sort(gapminder$gdp) %>% head
 sort(gapminder$gdp, decreasing=T) %>% head
 ```
 
-If you have a dataframe and you want to sort it:
+If you have a dataframe and you want to sort it, use the order function:
 
 ```{r}
 gapminder[order(gapminder$gdpPercap),]
@@ -386,7 +391,6 @@ There is a lot more you can do with factors, but I usually only use them when I'
 #########
 # Exercise
 #########
-
 
 Using the iris dataset, and the tools above, figure out the petal width of the flower with the longest petal length.
 
@@ -485,7 +489,7 @@ which(is.na(this_is_a_vector))
 
 So objects 7, 8, and 9 are missing. What if we want to just simply get rid of them?
 
-One way is called listwise deletion, which I introduced above -- it basically will just delete all NAs in a vector (but be careful, it will delete complete rows in a dataframe!)
+One way is called listwise deletion, which I introduced above -- it basically will just delete all NAs in a vector (but be careful, it will delete complete rows in a dataframe! (SIDE NOTE ON REGRESSION AND LISTWISE DELETE)
 
 ```{r}
 new_vector <- na.omit(this_is_a_vector)
@@ -1623,3 +1627,66 @@ ggplot(gapminder, aes(x=year, y=lifeExp, color=continent)) + geom_point() + stat
 #paste
 
 #string manipulation
+ 
+ 
+ 
+ 
+df <- read.csv("/Users/treny/cleaned_anes_pilot_2016.csv", stringsAsFactors = F)
+data.out <- df %>% dplyr :: select(vote12, gender, white, pid7, ideo5, rr_scale)
+write.csv(data.out)
+
+data.out$vote_obama <- ifelse(data.out$vote12 == 2, 1, 0)
+data.out$white <- as.numeric(data.out$white)
+write.table(data.out, "/Users/treny/Dropbox/_projects/r_crash_course/sample_anes_data.txt", sep="\t")
+
+
+
+library(MASS)
+library(simcf)
+
+head(data.out)
+summary(glm(vote_obama ~ gender + white + pid7 + ideo5 + rr_scale, family=binomial(link='logit'), data=data.out))
+
+glm.out <- glm(vote_obama ~ gender + white + pid7 + ideo5 + rr_scale, family=binomial(link='logit'), data=data.out)
+pe <- coef(glm.out)
+vc <- vcov(glm.out)
+simbetas <- mvrnorm(1000, pe, vc)
+
+hyp.x <- seq(1, 5, 0.25)
+hyp.data <- cfMake(vote_obama ~ gender + white + pid7 + ideo5 + rr_scale, data.out, nscen=length(hyp.x))
+hyp.data <- cfChange(hyp.data, "rr_scale", x=hyp.x, scen=1:length(hyp.x))
+logit.out <- logitsimev(hyp.data, simbetas, ci=0.95)
+logit.out
+
+datafp <- data.frame(x=hyp.x,
+                     y=logit.out$pe,
+                     ylower=logit.out$lower,
+                     yupper=logit.out$upper)
+ggplot(datafp, aes(x=x, y=y)) + geom_line(color="red") + 
+  theme_bw() + labs(x='Racial Resentment', y="Prob Voting Obama 2012") +
+  geom_ribbon(aes(ymin=ylower, ymax=yupper), alpha=.1)
+  
+source_GitHubData <-function(url, sep = ",", header = TRUE){
+  require(httr)
+  request <- GET(url)
+  stop_for_status(request)
+  handle <- textConnection(content(request, as = 'text'))
+  on.exit(close(handle))
+  read.table(handle, sep = sep, header = header)
+}
+url <- ("https://raw.githubusercontent.com/tylerreny/teaching/master/sample_anes_data.txt")
+df <- source_GitHubData(url, sep='\t')
+
+
+library('httr')    
+raw <- content(GET("https://raw.githubusercontent.com/tylerreny/teaching/master/sample_anes_data.txt"))
+read.table(raw, sep='\t')
+
+data.out <- data.out %>% head(1000)
+data.out %>% arrange(desc(ftobama)) %>% head()
+
+url <- url()
+test <- read.table.url(, sep="\t")
+names(test)
+glimpse(test)
+
