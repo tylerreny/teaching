@@ -1,0 +1,41 @@
+---
+title: "PGI Review Figure"
+output: pdf_document
+date: "2023-07-26"
+---
+
+```{r, warning=F,message=F}
+library(tidyverse)
+library(estimatr)
+
+# sample size
+n <- 2577
+
+# set seed for replication
+set.seed(123)
+
+# generate treatment assignment
+treats <- sample(c(1,2,3,4), size=n, replace=T)
+treat2 <- ifelse(treats == 2,1,0)
+treat3 <- ifelse(treats == 3,1,0)
+treat4 <- ifelse(treats == 4,1,0)
+
+# create y given Table 1 in paper
+y <- 1 + 0.040 * treat2 + 0.042 * treat3 + 0.076 * treat4 + rnorm(n, 0, 0.575)
+
+# run regression w robust SEs to estimate treatment effects
+lm_robust(y ~ treat2 + treat3 + treat4)
+
+# create figure
+data.frame(
+  treats=treats,
+  y=y
+) %>%
+  group_by(treats) %>%
+  summarise(mean = mean(y), 
+            l = mean - 1.96 * sd(y) / sqrt(n()),
+            u = mean + 1.96 * sd(y) / sqrt(n())) %>%
+  ggplot(aes(x=treats, y=mean, ymin=l, ymax=u)) +
+  geom_pointrange()
+```
+
